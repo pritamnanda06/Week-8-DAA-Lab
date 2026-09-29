@@ -32,15 +32,6 @@ MIN-COIN-CHANGE(C[1..n], V)
 9   return dp[V]
 ```
 
-## Example
-`C = {1, 5, 6}`, `V = 11`
-
-| v | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
-|---|---|---|---|---|---|---|---|---|---|---|----|----|
-| dp[v] | 0 | 1 | 2 | 3 | 4 | 1 | 1 | 2 | 3 | 4 | 2 | **2** |
-
-Answer = 2 (5 + 6). A greedy choice (6 + 1x5) would give 6 coins, so DP is needed.
-
 ## Complexity
 * Outer loop runs `V` times, inner loop `n` times, each step O(1): `T(n,V) = sum_{v=1..V} n = nV` => **Time O(nV)**
 * One array of size `V + 1` => **Space O(V)**
@@ -72,18 +63,6 @@ COIN-WAYS(C[1..n], V)
 5           dp[v] = dp[v] + dp[v - C[i]]
 6   return dp[V]
 ```
-
-## Example
-`C = {1, 2, 5}`, `V = 5`
-
-| after coin | dp[0..5] |
-|-----------|----------|
-| none | 1 0 0 0 0 0 |
-| 1 | 1 1 1 1 1 1 |
-| 2 | 1 1 2 2 3 3 |
-| 5 | 1 1 2 2 3 **4** |
-
-Answer = 4: `{5}`, `{2,2,1}`, `{2,1,1,1}`, `{1,1,1,1,1}`.
 
 ## Complexity
 * Coin `i` performs `V - C[i] + 1 <= V` updates: total <= `nV` => **Time O(nV)**
@@ -129,9 +108,6 @@ RECONSTRUCT(L, X, Y)                // walk back from (m, n)
 7   return S
 ```
 
-## Example
-`X = AGGTAB`, `Y = GXTXAYB` => length **4**, LCS = **GTAB**.
-
 ## Complexity
 * Table has `(m+1)(n+1)` cells, each filled in O(1) => **Time O(mn)**
 * Traceback moves one step up/left per iteration: at most `m + n` steps => O(m + n)
@@ -161,29 +137,6 @@ LIS(A[0..n-1])
 7       best = max(best, dp[i])
 8   return best
 ```
-
-## Approach 2 (optional): Binary search, O(n log n)
-Keep `tails[k]` = smallest possible last element of an increasing subsequence of length `k+1`.
-
-```text
-LIS-FAST(A[0..n-1])
-1   len = 0
-2   for each x in A
-3       pos = lower_bound(tails[0..len-1], x)   // first index with tails[pos] >= x
-4       tails[pos] = x
-5       if pos == len: len = len + 1
-6   return len
-```
-
-## Example
-`A = [10, 22, 9, 33, 21, 50, 41, 60]`
-
-| i | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
-|---|---|---|---|---|---|---|---|---|
-| A[i] | 10 | 22 | 9 | 33 | 21 | 50 | 41 | 60 |
-| dp[i] | 1 | 2 | 1 | 3 | 2 | 4 | 4 | **5** |
-
-LIS length = 5, e.g. `10, 22, 33, 50, 60`.
 
 ## Complexity
 * Approach 1: inner loop runs `i` times => `sum_{i=0..n-1} i = n(n-1)/2` => **Time O(n^2)**, **Space O(n)**
@@ -216,16 +169,6 @@ MSIS(A[0..n-1])
 7       best = max(best, ms[i])
 8   return best
 ```
-
-## Example
-`A = [1, 101, 2, 3, 100, 4, 5]`
-
-| i | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
-|---|---|---|---|---|---|---|---|
-| A[i] | 1 | 101 | 2 | 3 | 100 | 4 | 5 |
-| ms[i] | 1 | 102 | 3 | 6 | **106** | 10 | 15 |
-
-Answer = 106 (`1 + 2 + 3 + 100`).
 
 ## Complexity
 * Nested loops: `sum_{i=0..n-1} i = n(n-1)/2` => **Time O(n^2)**
@@ -272,19 +215,6 @@ TRACEBACK(i, j)                      // call TRACEBACK(m, n); prints in forward 
 9       TRACEBACK(i, j-1);    print "Insert B[j]"
 ```
 
-## Example
-`A = kitten`, `B = sitting` => distance **3**
-
-```text
-Replace k -> s
-Match   i
-Match   t
-Match   t
-Replace e -> i
-Match   n
-Insert  g
-```
-
 ## Complexity
 * `(m+1)(n+1)` cells, each O(1) => **Time O(mn)**
 * Traceback takes at most `m + n` steps => O(m + n)
@@ -322,16 +252,6 @@ PRINT-CUTS(cut, n)
 2       print cut[n]
 3       n = n - cut[n]
 ```
-
-## Example
-`P = [1, 5, 8, 9, 10, 17, 17, 20]`, `n = 8`
-
-| j | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
-|---|---|---|---|---|---|---|---|---|
-| r[j] | 1 | 5 | 8 | 10 | 13 | 17 | 18 | **22** |
-| cut[j] | 1 | 2 | 3 | 2 | 2 | 6 | 1 | 2 |
-
-Max revenue = 22, pieces = `2 + 6`.
 
 ## Complexity
 * For each `j` the inner loop runs `j` times: `sum_{j=1..n} j = n(n+1)/2` => **Time O(n^2)**
@@ -376,9 +296,6 @@ OPTIMAL-BST(p[1..n], q[0..n], n)
 13  return e[1][n], root
 ```
 
-## Example
-`p = [0.15, 0.10, 0.05, 0.10, 0.20]`, `q = [0.05, 0.10, 0.05, 0.05, 0.05, 0.10]`
-
 Minimum expected cost = **2.75**, root = `k2`; `k1` is its left child and `k5` its right child, with `k4` and `k3` below `k5`.
 
 ## Complexity
@@ -407,7 +324,6 @@ T(n) = 3n + 1       if n is odd
 | `trajectory(n)` | prints the sequence, step count and peak value |
 | `analyseInterval(a, b)` | finds the start value with the longest trajectory in `[a, b]` and the average step count |
 
-## Overflow handling
 For odd `n`, `3n + 1` fits in `unsigned long long` only if `n <= (ULLONG_MAX - 1) / 3`. The test is done **before** multiplying.
 
 ## Pseudocode
@@ -437,12 +353,6 @@ ANALYSE-INTERVAL(a, b)                      // memoised
 7       if i >= a: update best (longest) and running total
 8   report best start value, its steps, and average = total / (b - a + 1)
 ```
-
-**Why the memoisation is valid:** values are processed in increasing order, so once a walk from `i` drops below `i`, the remaining steps are already stored in `cache`.
-
-## Example
-`n = 27` => **111 steps**, peak **9232**.
-Interval `[1, 100000]` => longest trajectory starts at **77031** with **350 steps**.
 
 ## Complexity
 * `trajectory(n)`: **O(s)** time, where `s` is the number of steps (O(1) space)
